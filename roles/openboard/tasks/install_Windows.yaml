@@ -1,0 +1,2 @@
+- name: Install OpenBoard
+  win_command: C:\Windows\System32\msiexec.exe /i {{ openboard_installer_path }} /qn /norestart

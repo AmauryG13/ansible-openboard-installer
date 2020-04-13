@@ -1,15 +1,11 @@
-- name: Install OpenBoard on MacOS
-  block:
-    - name: Download .dmg file for MacOS
-      get_url:
-        url: "{{ item.browser_download_url }}"
-        dest: "{{ playbook_dir }}/{{ item.name }}"
-        force: yes
-      register: openboard_installer_download
-      when: '".dmg" in item.name'
-      with_items: "{{ openboard_github_assets }}"
+- name: Mount .dmg package
+  command: "hdiutil attach ./{{ openboard_installer_path }} -nobrowse -mountpoint ./{{ openboard_github_repo }}"
 
-    - set_fact:
-        openboard_installer_path: "{{ item.dest }}"
-      when: item.dest is defined
-      with_items: "{{ openboard_installer_download.results}}"
+- name: Extract the package content
+  shell: cp -aR ./{{ openboard_github_repo }}/*.app /Applications/{{ openboard_github_repo }}.app
+
+- name: Unmount the dmg package
+  command: hdiutil detach ./{{ openboard_github_repo }}/
+
+- name: Remove all the temporary files
+  command: rm -R ./tmp/
