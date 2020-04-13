@@ -1,0 +1,14 @@
+- name: Configure dependency if needed
+  command:
+    cmd: "./configure {{ item.configure.args }}"
+    chdir: "{{ playbook_dir }}/sources/OpenBoard-ThirdParty/{{ item.name }}/{{ item.name }}-{{ item.version }}"
+  when: item.configure.state == True
+
+- name: Build the qt dependency
+  command:
+    cmd: "qmake {{ item.name }}.pro -spec linux-g++"
+    chdir: "{{ playbook_dir }}/sources/OpenBoard-ThirdParty/{{ item.name }}"
+
+- name: Build the dependency
+  make:
+    chdir: "{{ playbook_dir }}/sources/OpenBoard-ThirdParty/{{ item.name }}"

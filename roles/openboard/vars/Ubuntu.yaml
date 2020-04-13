@@ -1,0 +1,26 @@
+dependencies_16:
+  - qt5-default
+  - libqt5svg5-dev
+  - libqt5webkit5-dev
+  - libqt5xmlpatterns5-dev
+  - qtscript5-dev
+  - libssl-dev
+  - libpaper-dev
+  - libmotif-dev
+  - qtmultimedia5-dev
+  - qttools5-dev
+
+dependencies_18:
+  - qt5-default
+  - libqt5svg5-dev
+  - libqt5webkit5-dev
+  - libqt5xmlpatterns5-dev
+  - qtscript5-dev
+  - libssl-dev
+  - libpaper-dev
+  - libmotif-dev
+  - qtmultimedia5-dev
+  - qttools5-dev
+  - libavcodec-dev
+  - libavformat-dev
+  - libswscale-dev

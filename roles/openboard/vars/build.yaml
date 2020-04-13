@@ -1,0 +1,18 @@
+openboard_build_importer: True
+
+openboard_build_dependencies:
+  - name: freetype
+    version: 2.6.1
+    configure:
+      state: False
+      args:
+  - name: quazip
+    version:
+    configure:
+      state: False
+      args: ""
+  - name: xpdf
+    version: 3.04
+    configure:
+      state: True
+      args: "--with-freetype2-library='../../freetype/lib/linux' --with-freetype2-includes='../../freetype/freetype-2.6.1/include'"

@@ -1,0 +1,13 @@
+install_from: "package"
+
+openboard_github_owner: OpenBoard-org
+openboard_github_repo: OpenBoard
+
+openboard_github_extra_repo:
+  - "{{ openboard_github_repo}}-Importer"
+  - "{{ openboard_github_repo}}-ThirdParty"
+
+github_uri_base: https://api.github.com/repos
+github_uri_latest: "releases/latest"
+
+openboard_github_tag_Ubuntu_18: v1.5.3-ubuntu18

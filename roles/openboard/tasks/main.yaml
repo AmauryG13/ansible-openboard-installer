@@ -1,0 +1,10 @@
+- name: Include tasks to get the latest version
+  include_tasks: version.yaml
+
+- name: Install OpenBoard
+  include_tasks: install.yaml
+  when: install_from == "package"
+
+- name: Install OpenBoard from source
+  include_tasks: build.yaml
+  when: install_from == "sources"

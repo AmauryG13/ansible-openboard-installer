@@ -1,0 +1,4 @@
+# Xenial repositories to satisfy OpenBoard v1.5.4 dependencies
+
+deb http://fr.archive.ubuntu.com/ubuntu xenial main universe
+deb http://security.ubuntu.com/ubuntu xenial-security main universe

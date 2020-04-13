@@ -1,0 +1,41 @@
+- set_fact:
+    ansible_platform: "linux"
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+
+- set_fact:
+    ansible_platform: "mac"
+  when: ansible_distribution == "MacOS"
+
+- set_fact:
+    ansible_platform: "windows"
+  when: ansible_distribution == "Windows"
+
+- name: Download installer file for this OS
+  get_url:
+    url: "{{ item.browser_download_url }}"
+    dest: "{{ playbook_dir }}/{{ item.name }}"
+    force: yes
+  register: openboard_installer_download
+  when: "vars[ansible_platform + '_exec_ext'] in item.name"
+  with_items: "{{ openboard_github_assets }}"
+  vars:
+    linux_exec_ext: ".deb"
+    mac_exec_ext: ".dmg"
+    windows_exec_ext: ".exe"
+
+- set_fact:
+    openboard_installer_path: "{{ item.dest }}"
+  when: item.dest is defined
+  with_items: "{{ openboard_installer_download.results}}"
+
+- name: Include tasks for the Linux based OS
+  include_tasks: 'install_Linux.yaml'
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+
+- name: Include tasks for MacOS
+  include_tasks: install_MacOS.yaml
+  when: ansible_distribution == "MacOS"
+
+- name: Include tasks Windows
+  include_tasks: install_Windows.yaml
+  when: ansible_distribution == "Windows"

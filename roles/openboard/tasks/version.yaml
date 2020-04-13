@@ -1,0 +1,29 @@
+- name: Get the latest version from GitHub
+  uri:
+    url: "{{ github_uri_base }}/{{ openboard_github_owner}}/{{ openboard_github_repo }}/{{ github_uri_latest }}"
+    return_content: yes
+  register: openboard_github_content
+
+- name: Get the latest version for Ubuntu 18
+  uri:
+    url: "{{ github_uri_base }}/{{ openboard_github_owner}}/{{ openboard_github_repo }}/releases/tags/{{ openboard_github_tag_Ubuntu_18 }}"
+    return_content: yes
+  register: openboard_github_content_18
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "18"
+
+- set_fact:
+    openboard_github_version: "{{ openboard_github_content.json.name }}"
+    openboard_github_assets_url: "{{ openboard_github_content.json.assets_url }}"
+
+- set_fact:
+    openboard_github_version: "{{ openboard_github_content_18.json.name }}"
+  when: openboard_github_content_18 is not skipped
+
+- name: Get the assets for the latest version from GitHub
+  uri:
+    url: "{{ openboard_github_assets_url }}"
+    return_content: yes
+  register: openboard_github_assets_content
+
+- set_fact:
+    openboard_github_assets: "{{ openboard_github_assets_content.json | list }}"

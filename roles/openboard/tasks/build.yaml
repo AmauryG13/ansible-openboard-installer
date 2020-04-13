@@ -1,0 +1,47 @@
+- name: Include version tasks
+  include_tasks: version.yaml
+
+- name: Include variables from building
+  include_vars: vars/build.yaml
+
+- name: Install OpenBoard from source
+  block:
+    - name: Clone the source directory
+      git:
+        clone: yes
+        repo: "https://github.com/{{ openboard_github_owner }}/{{ openboard_github_repo }}.git"
+        version: "{{ openboard_github_version }}"
+        dest: "{{ playbook_dir }}/sources/{{ openboard_github_repo }}"
+
+    - name: Clone the 3rd party repo
+      git:
+        clone: yes
+        repo: "https://github.com/{{ openboard_github_owner }}/{{ item }}.git"
+        dest: "{{ playbook_dir }}/sources/{{ item }}"
+      with_items: "{{ openboard_github_extra_repo }}"
+
+    - name: Build all dependencies
+      include_tasks: dependencies.yaml
+      with_items: "{{ openboard_build_dependencies }}"
+
+    - name: Build Sankore Importer
+      command:
+        cmd: qmake OpenBoardImporter.pro -spec linux-g++
+        chdir: "{{ playbook_dir }}/sources/OpenBoard-Importer"
+      when: openboard_build_importer == True
+
+    - name: Build Importer target
+      make:
+        chdir: "{{ playbook_dir }}/sources/OpenBoard-Importer"
+
+    - name: Build product
+      command:
+        cmd: "qmake {{ openboard_github_repo }}.pro -spec linux-g++-64"
+        chdir: "{{ playbook_dir }}/sources/{{ openboard_github_repo }}"
+
+    - name: Build product target
+      make:
+        chdir: "{{ playbook_dir }}/sources/{{ openboard_github_repo }}"
+        target: install
+        params:
+          NUM_THREADS: 4
